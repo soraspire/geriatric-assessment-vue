@@ -19,7 +19,7 @@ const router = createRouter({
 });
 
 // Auth Guard
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn.value) {
     next('/login');
   } else if (to.path === '/login' && isLoggedIn.value) {

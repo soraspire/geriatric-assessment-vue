@@ -121,13 +121,10 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import api from '../api';
-import { useAuth } from '../auth';
-
 const route = useRoute();
 const assessment = ref<any>(null);
 const results = ref<any>(null);
 const loading = ref(true);
-const { isLoggedIn } = useAuth();
 
 const fetchDetail = async () => {
     loading.value = true;
