@@ -113,7 +113,11 @@
         </div>
     </div>
 
-    <div class="actions-no-print" style="margin-top: 30px; display: flex; gap: 15px;">
+    <div v-if="assessment" style="text-align: right; margin-top: 30px; color: #64748b; font-style: italic;">
+        Ngày đánh giá: {{ new Date(assessment.createdAt).toLocaleDateString('vi-VN') }}
+    </div>
+
+    <div class="actions-no-print" style="margin-top: 20px; display: flex; gap: 15px;">
         <router-link to="/" class="btn" style="flex: 1; margin: 0; text-align: center; line-height: 1.5;">TẠO PHIẾU MỚI</router-link>
         <button @click="handlePrint" class="btn btn-secondary" style="flex: 1; margin: 0; background-color: #64748b;">XUẤT FILE / IN PHIẾU</button>
     </div>

@@ -31,6 +31,7 @@
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
         </form>
 
+        <div class="table-container">
         <table>
             <thead>
                 <tr>
@@ -43,7 +44,8 @@
                     <th>MNA</th>
                     <th>CFS</th>
                     <th>Morse</th>
-                    <th></th>
+                    <th>Ngày đánh giá</th>
+                    <th class="sticky-column"></th>
                 </tr>
             </thead>
             <tbody>
@@ -77,7 +79,8 @@
                             {{ item.morseTotalScore }}đ
                         </span>
                     </td>
-                    <td>
+                    <td>{{ new Date(item.createdAt).toLocaleDateString('vi-VN') }}</td>
+                    <td class="sticky-column">
                         <router-link :to="'/assessments/' + item.uuid" target="_blank" style="color: var(--primary); font-weight: 600; text-decoration: none;">Xem chi tiết</router-link>
                     </td>
                 </tr>
@@ -86,6 +89,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
 
         <div v-if="pagination.totalPages > 1" class="pagination">
             <button v-if="pagination.page > 1" @click="changePage(pagination.page - 1)" class="btn-pagination">Trước</button>
@@ -213,5 +217,34 @@ onMounted(fetchAssessments);
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+table {
+    border: none; /* Removed outer border because container has it */
+    min-width: 1000px; /* Force scroll on smaller containers */
+}
+
+.sticky-column {
+    position: sticky;
+    right: 0;
+    background: white;
+    z-index: 10;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+}
+
+th.sticky-column {
+    background: #f1f5f9;
+}
+
+tr:hover .sticky-column {
+    background: #f8fafc; /* Match hover color */
 }
 </style>
