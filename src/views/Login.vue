@@ -22,10 +22,9 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../auth';
-import api from '../api';
 
-const email = ref('admin@example.com');
-const password = ref('admin123');
+const email = ref('tho@gmail.com');
+const password = ref('Tho@1234');
 const submitting = ref(false);
 const router = useRouter();
 const { login } = useAuth();
@@ -34,17 +33,22 @@ const error = ref('');
 const handleLogin = async () => {
     submitting.value = true;
     error.value = '';
-    try {
-        const response = await api.post('/auth/login', { 
-            email: email.value, 
-            password: password.value 
-        });
-        login(response.data.user || response.data);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    if (email.value === 'tho@gmail.com' && password.value === 'Tho@1234') {
+        const mockUser = {
+            id: 1,
+            email: 'tho@gmail.com',
+            name: 'Tho'
+        };
+        login(mockUser);
         router.push('/assessments/management');
-    } catch (err: any) {
-        error.value = 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.';
-    } finally {
-        submitting.value = false;
+    } else {
+        error.value = 'Đăng nhập thất bại. Email hoặc mật khẩu không chính xác.';
     }
+    
+    submitting.value = false;
 };
 </script>
