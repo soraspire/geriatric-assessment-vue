@@ -6,10 +6,9 @@ import AssessmentDetail from '../views/AssessmentDetail.vue';
 import { isLoggedIn } from '../auth';
 
 const routes = [
-  { path: '/', redirect: '/assessments/create' },
+  { path: '/', name: 'AssessmentCreate', component: AssessmentCreate },
   { path: '/login', name: 'Login', component: Login },
   { path: '/assessments/management', name: 'AssessmentList', component: AssessmentList, meta: { requiresAuth: true } },
-  { path: '/assessments/create', name: 'AssessmentCreate', component: AssessmentCreate },
   { path: '/assessments/:uuid', name: 'AssessmentDetail', component: AssessmentDetail, props: true },
 ];
 

@@ -12,9 +12,7 @@
           <router-link to="/assessments/management" class="nav-item" active-class="active">
             Quản lý phiếu
           </router-link>
-          <router-link to="/assessments/create" class="nav-item">
-            Tạo phiếu mới
-          </router-link>
+          <router-link to="/" class="nav-item">TẠO PHIẾU MỚI</router-link>
         </nav>
         <div class="sidebar-footer">
           <a href="#" @click.prevent="handleLogout" class="logout-btn">Đăng xuất</a>

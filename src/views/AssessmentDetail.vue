@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <router-link to="/assessments/create" class="btn" style="margin-top: 20px;">TẠO PHIẾU MỚI</router-link>
+    <router-link to="/" class="btn" style="margin-top: 20px;">TẠO PHIẾU MỚI</router-link>
   </div>
 </template>
 

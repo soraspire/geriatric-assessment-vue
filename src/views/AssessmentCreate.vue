@@ -1,5 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container" :class="{ 'submitting-overlay-active': submitting }">
+    <!-- Loading Overlay -->
+    <div v-if="submitting" class="loading-overlay">
+        <div class="loading-content">
+            <span class="spinner-large"></span>
+            <p>Đang xử lý dữ liệu...</p>
+        </div>
+    </div>
     <header>
       <h1>Bệnh Viện Đà Nẵng - Khoa Lão</h1>
       <p>PHIẾU ĐÁNH GIÁ LÃO KHOA TOÀN DIỆN</p>
@@ -64,9 +71,9 @@
             <table class="other-details-table">
                 <tbody>
                     <tr>
-                        <td style="width: 25%; font-weight: 600;"><span class="check-icon">✓</span> Dị ứng thuốc:</td>
-                        <td style="width: 45%;">Có tiền sử dị ứng thuốc hay không?</td>
-                        <td style="width: 30%;">
+                        <td class="table-label"><span class="check-icon">✓</span> Dị ứng thuốc:</td>
+                        <td class="table-description">Có tiền sử dị ứng thuốc hay không?</td>
+                        <td class="table-action">
                             <div class="radio-group" :class="{ 'is-invalid': errors.other?.has_drug_allergy }">
                                 <label class="checkbox-item"><input type="radio" v-model="form.other.has_drug_allergy" value="1"> Có</label>
                                 <label class="checkbox-item"><input type="radio" v-model="form.other.has_drug_allergy" value="0"> Không</label>
@@ -75,16 +82,16 @@
                         </td>
                     </tr>
                     <tr v-if="form.other.has_drug_allergy === '1'">
-                        <td colspan="2" style="text-align: right; padding-right: 20px; font-style: italic; color: var(--text-light);">Nếu có: loại thuốc dị ứng:</td>
-                        <td>
+                        <td colspan="2" class="table-description-detail">Nếu có: loại thuốc dị ứng:</td>
+                        <td class="table-action">
                             <input type="text" v-model="form.other.drug_allergy_detail" :class="{ 'is-invalid': errors.other?.drug_allergy_detail }" placeholder="Nhập tên thuốc...">
                             <span v-if="errors.other?.drug_allergy_detail" class="error-message">{{ errors.other.drug_allergy_detail }}</span>
                         </td>
                     </tr>
                     <tr>
-                      <td style="font-weight: 600;"><span class="check-icon">✓</span> Giác quan:</td>
-                      <td>Nghe kém hoặc nhìn kém?</td>
-                      <td>
+                      <td class="table-label"><span class="check-icon">✓</span> Giác quan:</td>
+                      <td class="table-description">Nghe kém hoặc nhìn kém?</td>
+                      <td class="table-action">
                         <div class="radio-group" :class="{ 'is-invalid': errors.other?.has_sensory_impairment }">
                           <label class="checkbox-item"><input type="radio" v-model="form.other.has_sensory_impairment" value="1"> Có</label>
                           <label class="checkbox-item"><input type="radio" v-model="form.other.has_sensory_impairment" value="0"> Không</label>
@@ -93,9 +100,9 @@
                       </td>
                     </tr>
                     <tr>
-                      <td style="font-weight: 600;"><span class="check-icon">✓</span> Tiểu không tự chủ:</td>
-                      <td>Khó kiểm soát tiểu tiện?</td>
-                      <td>
+                      <td class="table-label"><span class="check-icon">✓</span> Tiểu không tự chủ:</td>
+                      <td class="table-description">Khó kiểm soát tiểu tiện?</td>
+                      <td class="table-action">
                         <div class="radio-group" :class="{ 'is-invalid': errors.other?.has_incontinence }">
                           <label class="checkbox-item"><input type="radio" v-model="form.other.has_incontinence" value="1"> Có</label>
                           <label class="checkbox-item"><input type="radio" v-model="form.other.has_incontinence" value="0"> Không</label>
@@ -104,9 +111,9 @@
                       </td>
                     </tr>
                     <tr>
-                      <td style="font-weight: 600;"><span class="check-icon">✓</span> Nguy cơ loét:</td>
-                      <td>Hạn chế vận động, nằm nhiều hoặc đang loét?</td>
-                      <td>
+                      <td class="table-label"><span class="check-icon">✓</span> Nguy cơ loét:</td>
+                      <td class="table-description">Hạn chế vận động, nằm nhiều hoặc đang loét?</td>
+                      <td class="table-action">
                         <div class="radio-group" :class="{ 'is-invalid': errors.other?.has_pressure_ulcer_risk }">
                           <label class="checkbox-item"><input type="radio" v-model="form.other.has_pressure_ulcer_risk" value="1"> Có</label>
                           <label class="checkbox-item"><input type="radio" v-model="form.other.has_pressure_ulcer_risk" value="0"> Không</label>
@@ -115,9 +122,9 @@
                       </td>
                     </tr>
                     <tr>
-                      <td style="font-weight: 600;"><span class="check-icon">✓</span> Hoàn cảnh xã hội:</td>
-                      <td>Có người chăm sóc khi cần thiết?</td>
-                      <td>
+                      <td class="table-label"><span class="check-icon">✓</span> Hoàn cảnh xã hội:</td>
+                      <td class="table-description">Có người chăm sóc khi cần thiết?</td>
+                      <td class="table-action">
                         <div class="radio-group" :class="{ 'is-invalid': errors.other?.has_caregiver }">
                           <label class="checkbox-item"><input type="radio" v-model="form.other.has_caregiver" value="1"> Có</label>
                           <label class="checkbox-item"><input type="radio" v-model="form.other.has_caregiver" value="0"> Không</label>
@@ -239,6 +246,7 @@
       </div>
 
       <button type="submit" class="btn" :disabled="submitting">
+        <span v-if="submitting" class="spinner"></span>
         {{ submitting ? 'ĐANG LƯU...' : 'LƯU PHIẾU ĐÁNH GIÁ' }}
       </button>
     </form>
@@ -451,8 +459,119 @@ const toggleMemory = (show: boolean) => {
   showMemoryContent.value = show;
 };
 
+const validate = () => {
+    const errorMessages: any = {};
+
+    // Section I. Main Patient Info
+    if (!form.main.patient_name) {
+        errorMessages.main = { ...errorMessages.main, patient_name: 'Vui lòng nhập họ tên bệnh nhân.' };
+    }
+    if (!form.main.birth_year) {
+        errorMessages.main = { ...errorMessages.main, birth_year: 'Vui lòng nhập năm sinh.' };
+    }
+    if (!form.main.gender) {
+        errorMessages.main = { ...errorMessages.main, gender: 'Vui lòng chọn giới tính.' };
+    }
+    if (!form.main.phone_number) {
+        errorMessages.main = { ...errorMessages.main, phone_number: 'Vui lòng nhập số điện thoại người nhà.' };
+    }
+    if (!form.main.previous_job) {
+        errorMessages.main = { ...errorMessages.main, previous_job: 'Vui lòng nhập công việc trước đây.' };
+    }
+    if (!form.main.height) {
+        errorMessages.main = { ...errorMessages.main, height: 'Vui lòng nhập chiều cao.' };
+    }
+    if (!form.main.weight) {
+        errorMessages.main = { ...errorMessages.main, weight: 'Vui lòng nhập cân nặng.' };
+    }
+    if (!form.main.bmi) {
+        errorMessages.main = { ...errorMessages.main, bmi: 'Vui lòng nhập BMI.' };
+    }
+
+    // Section III. Minicog
+    if (!form.minicog.clock_selected) {
+        errorMessages.minicog = { ...errorMessages.minicog, clock_selected: 'Vui lòng chọn hình ảnh đồng hồ.' };
+    }
+    if (!form.minicog.recall || form.minicog.recall.length !== 3) {
+        errorMessages.minicog = { ...errorMessages.minicog, recall: 'Vui lòng chọn đúng 3 từ nhớ lại.' };
+    }
+
+    // Section IV. MNA
+    if (form.mna.giam_an_uong === '') {
+        errorMessages.mna = { ...errorMessages.mna, giam_an_uong: 'Vui lòng chọn mức độ ăn uống.' };
+    }
+    if (form.mna.sut_can === '') {
+        errorMessages.mna = { ...errorMessages.mna, sut_can: 'Vui lòng chọn mức độ sút cân.' };
+    }
+    if (form.mna.kha_nang_van_dong === '') {
+        errorMessages.mna = { ...errorMessages.mna, kha_nang_van_dong: 'Vui lòng chọn khả năng vận động.' };
+    }
+    if (form.mna.stress_tam_ly === '') {
+        errorMessages.mna = { ...errorMessages.mna, stress_tam_ly: 'Vui lòng chọn stress thể chất hoặc bệnh lý.' };
+    }
+    if (form.mna.van_de_tam_than_kinh === '') {
+        errorMessages.mna = { ...errorMessages.mna, van_de_tam_than_kinh: 'Vui lòng chọn vấn đề tâm thần kinh.' };
+    }
+    if (form.mna.bmi_score === '') {
+        errorMessages.mna = { ...errorMessages.mna, bmi_score: 'Vui lòng chọn điểm BMI.' };
+    }
+
+    // Section V. CFS
+    if (form.cfs.cfs_level === '') {
+        errorMessages.cfs = { ...errorMessages.cfs, cfs_level: 'Vui lòng chọn mức độ suy yếu lâm sàng.' };
+    }
+
+    // Section VI. Morse
+    if (form.morse.tien_su_te_nga === '') {
+        errorMessages.morse = { ...errorMessages.morse, tien_su_te_nga: 'Vui lòng chọn tiền sử té ngã.' };
+    }
+    if (form.morse.benh_ly_di_kem === '') {
+        errorMessages.morse = { ...errorMessages.morse, benh_ly_di_kem: 'Vui lòng chọn bệnh lý đi kèm.' };
+    }
+    if (form.morse.duong_truyen_dich === '') {
+        errorMessages.morse = { ...errorMessages.morse, duong_truyen_dich: 'Vui lòng chọn đường truyền dịch.' };
+    }
+    if (form.morse.ho_tro_di_lai === '') {
+        errorMessages.morse = { ...errorMessages.morse, ho_tro_di_lai: 'Vui lòng chọn hỗ trợ đi lại.' };
+    }
+    if (form.morse.bat_thuong_di_chuyen === '') {
+        errorMessages.morse = { ...errorMessages.morse, bat_thuong_di_chuyen: 'Vui lòng chọn bất thường di chuyển.' };
+    }
+    if (form.morse.tinh_trang_tinh_than === '') {
+        errorMessages.morse = { ...errorMessages.morse, tinh_trang_tinh_than: 'Vui lòng chọn tình trạng tinh thần.' };
+    }
+
+    // Section Other (in Section I)
+    if (form.other.has_drug_allergy === '') {
+        errorMessages.other = { ...errorMessages.other, has_drug_allergy: 'Vui lòng chọn tiền sử dị ứng thuốc.' };
+    }
+    if (form.other.has_sensory_impairment === '') {
+        errorMessages.other = { ...errorMessages.other, has_sensory_impairment: 'Vui lòng chọn tình trạng giác quan.' };
+    }
+    if (form.other.has_incontinence === '') {
+        errorMessages.other = { ...errorMessages.other, has_incontinence: 'Vui lòng chọn tình trạng tiểu không tự chủ.' };
+    }
+    if (form.other.has_pressure_ulcer_risk === '') {
+        errorMessages.other = { ...errorMessages.other, has_pressure_ulcer_risk: 'Vui lòng chọn nguy cơ loét.' };
+    }
+    if (form.other.has_caregiver === '') {
+        errorMessages.other = { ...errorMessages.other, has_caregiver: 'Vui lòng chọn tình trạng người chăm sóc.' };
+    }
+
+    return errorMessages;
+};
+
 const handleSubmit = async () => {
     errors.value = {};
+    
+    // Perform frontend validation
+    const frontendErrors = validate();
+    if (Object.keys(frontendErrors).length > 0) {
+        errors.value = frontendErrors;
+        scrollToError();
+        return;
+    }
+
     submitting.value = true;
     try {
         const payload = {
@@ -677,6 +796,26 @@ select {
     gap: 15px;
 }
 
+.table-label {
+    width: 25%;
+    font-weight: 600;
+}
+
+.table-description {
+    width: 45%;
+}
+
+.table-action {
+    width: 30%;
+}
+
+.table-description-detail {
+    text-align: right;
+    padding-right: 20px;
+    font-style: italic;
+    color: var(--text-light);
+}
+
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -743,6 +882,115 @@ select {
 
 .btn:hover {
     background: var(--primary-hover);
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 12px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Loading Overlay Styles */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: wait;
+}
+
+.loading-content {
+    text-align: center;
+    background: white;
+    padding: 30px 50px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.loading-content p {
+    font-weight: 600;
+    color: #1e40af;
+    margin: 0;
+}
+
+.spinner-large {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.submitting-overlay-active {
+    overflow: hidden;
+    height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .other-details-table thead {
+        display: none;
+    }
+    
+    .other-details-table tr {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--border);
+        margin-bottom: 12px;
+        border-radius: 8px;
+        padding: 8px;
+    }
+    
+    .other-details-table td {
+        border: none !important;
+        width: 100% !important;
+        padding: 4px 8px !important;
+    }
+    
+    .table-label {
+        font-weight: 700;
+        color: var(--primary);
+    }
+    
+    .table-description-detail {
+        text-align: left;
+        padding-right: 0;
+        font-weight: 600;
+    }
+    
+    .radio-group {
+        margin-top: 8px;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
 }
 
 @media (max-width: 640px) {
