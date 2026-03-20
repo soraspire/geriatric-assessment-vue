@@ -113,7 +113,10 @@
         </div>
     </div>
 
-    <router-link to="/" class="btn" style="margin-top: 20px;">TẠO PHIẾU MỚI</router-link>
+    <div class="actions-no-print" style="margin-top: 30px; display: flex; gap: 15px;">
+        <router-link to="/" class="btn" style="flex: 1; margin: 0; text-align: center; line-height: 1.5;">TẠO PHIẾU MỚI</router-link>
+        <button @click="handlePrint" class="btn btn-secondary" style="flex: 1; margin: 0; background-color: #64748b;">XUẤT FILE / IN PHIẾU</button>
+    </div>
   </div>
 </template>
 
@@ -139,6 +142,10 @@ const fetchDetail = async () => {
     }
 };
 
+const handlePrint = () => {
+    window.print();
+};
+
 onMounted(fetchDetail);
 </script>
 
@@ -162,5 +169,36 @@ h3 {
     font-size: 1.1rem;
     color: #1e3a8a;
     margin-bottom: 8px;
+}
+
+@media print {
+    .actions-no-print {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Keep table borders in print */
+    table, th, td {
+        border: 1px solid #000 !important;
+    }
+    
+    h1 {
+        font-size: 1.5rem !important;
+        text-align: center !important;
+    }
+
+    /* Print colors */
+    .status-risk { color: #dc2626 !important; -webkit-print-color-adjust: exact; }
+    .status-normal { color: #16a34a !important; -webkit-print-color-adjust: exact; }
+    
+    .section-interpretation {
+        page-break-before: auto;
+    }
 }
 </style>
