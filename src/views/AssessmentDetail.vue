@@ -38,43 +38,43 @@
         </thead>
         <tbody>
             <tr>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Đa bệnh lý (CCI)</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">0 / {{ results.cci.max }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.cci.score }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.cci.is_risk ? 'status-risk' : 'status-normal'">
+                <td data-label="Lĩnh vực" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Đa bệnh lý (CCI)</td>
+                <td data-label="Điểm chuẩn" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">0 / {{ results.cci.max }}</td>
+                <td data-label="Điểm BN" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.cci.score }}</td>
+                <td data-label="Kết quả" style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.cci.is_risk ? 'status-risk' : 'status-normal'">
                     {{ results.cci.status }}
                 </td>
             </tr>
             <tr>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Sàng lọc sa sút trí tuệ (Mini-Cog)</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.minicog.normal }} / {{ results.minicog.max }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.minicog.score }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.minicog.is_risk ? 'status-risk' : 'status-normal'">
+                <td data-label="Lĩnh vực" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Sàng lọc sa sút trí tuệ (Mini-Cog)</td>
+                <td data-label="Điểm chuẩn" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.minicog.normal }} / {{ results.minicog.max }}</td>
+                <td data-label="Điểm BN" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.minicog.score }}</td>
+                <td data-label="Kết quả" style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.minicog.is_risk ? 'status-risk' : 'status-normal'">
                     {{ results.minicog.status }}
                 </td>
             </tr>
             <tr>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Dinh dưỡng bệnh nhân (MNA)</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.mna.normal }} / {{ results.mna.max }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.mna.score }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.mna.is_risk ? 'status-risk' : 'status-normal'">
+                <td data-label="Lĩnh vực" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Dinh dưỡng bệnh nhân (MNA)</td>
+                <td data-label="Điểm chuẩn" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.mna.normal }} / {{ results.mna.max }}</td>
+                <td data-label="Điểm BN" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.mna.score }}</td>
+                <td data-label="Kết quả" style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.mna.is_risk ? 'status-risk' : 'status-normal'">
                     {{ results.mna.status }}
                 </td>
             </tr>
             <tr>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Suy yếu (CFS)</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.cfs.normal }} / {{ results.cfs.max }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.cfs.score }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.cfs.is_risk ? 'status-risk' : 'status-normal'">
+                <td data-label="Lĩnh vực" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Suy yếu (CFS)</td>
+                <td data-label="Điểm chuẩn" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.cfs.normal }} / {{ results.cfs.max }}</td>
+                <td data-label="Điểm BN" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.cfs.score }}</td>
+                <td data-label="Kết quả" style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.cfs.is_risk ? 'status-risk' : 'status-normal'">
                     {{ results.cfs.status }} <br>
                     Mức độ: {{ results.cfs.interpretation }}
                 </td>
             </tr>
             <tr>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Đánh giá nguy cơ té ngã (Morse)</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.morse.normal }} / {{ results.morse.max }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.morse.score }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.morse.is_risk ? 'status-risk' : 'status-normal'">
+                <td data-label="Lĩnh vực" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Đánh giá nguy cơ té ngã (Morse)</td>
+                <td data-label="Điểm chuẩn" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.morse.normal }} / {{ results.morse.max }}</td>
+                <td data-label="Điểm BN" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.morse.score }}</td>
+                <td data-label="Kết quả" style="padding: 12px 15px; border-bottom: 1px solid var(--border);" :class="results.morse.is_risk ? 'status-risk' : 'status-normal'">
                     {{ results.morse.status }} <br>
                     Mức độ: {{ results.morse.interpretation }}
                 </td>
@@ -203,6 +203,59 @@ h3 {
     
     .section-interpretation {
         page-break-before: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .btn-secondary {
+        display: none !important;
+    }
+
+    .patient-info {
+        grid-template-columns: 1fr !important;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        padding-bottom: 10px;
+    }
+
+    td {
+        border: none !important;
+        position: relative;
+        padding-left: 45% !important;
+        text-align: right !important;
+        min-height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    td:not(:last-child) {
+        border-bottom: 1px solid #f1f5f9 !important;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 40%;
+        text-align: left;
+        font-weight: bold;
+        color: #64748b;
     }
 }
 </style>
