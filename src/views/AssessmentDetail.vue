@@ -11,7 +11,7 @@
     </div>
 
     <div v-if="assessment?.otherDetails" class="patient-info" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px; display: block;">
-        <p><strong>Dị ứng thuốc:</strong> 
+        <p style="margin-top: 8px"><strong>Dị ứng thuốc:</strong> 
             <template v-if="assessment.otherDetails.has_drug_allergy">
                 Có
                 <span v-if="assessment.otherDetails.drug_allergy_detail">
@@ -82,7 +82,7 @@
         </tbody>
     </table>
 
-    <div v-if="results" class="section-interpretation" style="margin-top: 30px;">
+    <div v-if="results" class="section-interpretation" style="margin-top: 0;">
         <h2>ĐÁNH GIÁ CHI TIẾT</h2>
         
         <div style="margin-top: 20px;">
@@ -239,7 +239,9 @@ h3 {
     }
 
     .section-interpretation {
-        margin-top: 15px !important;
+        margin-top: 0 !important;
+        break-before: page !important;
+        page-break-before: always !important;
     }
 
     .section-interpretation > div {
