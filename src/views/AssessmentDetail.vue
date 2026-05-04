@@ -187,26 +187,71 @@ h3 {
         margin: 0 !important;
     }
 
-    /* Keep table borders in print */
-    table, th, td {
+    /* Force table layout in print */
+    table {
+        display: table !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+    thead { display: table-header-group !important; }
+    tbody { display: table-row-group !important; }
+    tr { 
+        display: table-row !important; 
+        page-break-inside: avoid !important;
+    }
+    th, td { 
+        display: table-cell !important; 
         border: 1px solid #000 !important;
+        padding: 8px 10px !important;
+        text-align: left !important;
     }
     
+    td::before {
+        content: none !important;
+    }
+
     h1 {
         font-size: 1.5rem !important;
         text-align: center !important;
+        margin-bottom: 20px !important;
+    }
+
+    h2 {
+        font-size: 1.2rem !important;
+        margin-top: 20px !important;
+        margin-bottom: 10px !important;
+        color: #000 !important;
+        border-bottom: 1px solid #eee !important;
+    }
+
+    h3 {
+        font-size: 1rem !important;
+        margin-top: 10px !important;
+        margin-bottom: 5px !important;
+        color: #000 !important;
+    }
+
+    .patient-info {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 5px 15px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .section-interpretation {
+        margin-top: 15px !important;
+    }
+
+    .section-interpretation > div {
+        margin-top: 10px !important;
     }
 
     /* Print colors */
     .status-risk { color: #dc2626 !important; -webkit-print-color-adjust: exact; }
     .status-normal { color: #16a34a !important; -webkit-print-color-adjust: exact; }
-    
-    .section-interpretation {
-        page-break-before: auto;
-    }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     .btn-secondary {
         display: none !important;
     }
