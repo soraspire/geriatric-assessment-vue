@@ -21,9 +21,19 @@
             <template v-else>Không</template>
         </p>
         <p style="margin-top: 8px"><strong>Giác quan (khiếm khuyết):</strong> {{ assessment.otherDetails.has_sensory_impairment ? 'Có' : 'Không' }}</p>
-        <p style="margin-top: 8px"><strong>Tiểu không tự chủ:</strong> {{ assessment.otherDetails.has_incontinence ? 'Có' : 'Không' }}</p>
-        <p style="margin-top: 8px"><strong>Nguy cơ loét:</strong> {{ assessment.otherDetails.has_pressure_ulcer_risk ? 'Có' : 'Không' }}</p>
-        <p style="margin-top: 8px"><strong>Người chăm sóc:</strong> {{ assessment.otherDetails.has_caregiver ? 'Có' : 'Không' }}</p>
+        <div>
+            <p style="margin-top: 8px"><strong>Tiểu không tự chủ:</strong> {{ assessment.otherDetails.has_incontinence ? 'Có' : 'Không' }}</p>
+            <p style="margin-top: 8px"><strong>Người chăm sóc:</strong> {{ assessment.otherDetails.has_caregiver ? 'Có' : 'Không' }}</p>
+        </div>
+        <div>
+            <p style="margin-top: 8px"><strong>Nguy cơ loét:</strong> {{ assessment.otherDetails.has_pressure_ulcer_risk ? 'Có' : 'Không' }}</p>
+            <div v-if="results?.padua?.has_pressure_ulcer_risk" style="margin-top: 8px; margin-left: 15px;">
+                <p>- {{ results.padua.interpretation }}</p>
+            </div>
+            <div v-if="results?.improve?.show_improve && results?.improve?.interpretation" style="margin-top: 8px; margin-left: 15px;">
+                <p>- {{ results.improve.interpretation }}</p>
+            </div>
+        </div>
     </div>
 
     <h2>KẾT QUẢ TEST</h2>
@@ -45,7 +55,7 @@
                     {{ results.cci.status }}
                 </td>
             </tr>
-            <tr>
+            <tr v-if="results.minicog">
                 <td data-label="Lĩnh vực" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">Sàng lọc sa sút trí tuệ (Mini-Cog)</td>
                 <td data-label="Điểm chuẩn" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.minicog.normal }} / {{ results.minicog.max }}</td>
                 <td data-label="Điểm BN" style="padding: 12px 15px; border-bottom: 1px solid var(--border);">{{ results.minicog.score }}</td>
@@ -92,23 +102,23 @@
             <p v-else><em>Không ghi nhận bệnh lý đồng diễn nào.</em></p>
         </div>
 
-        <div style="margin-top: 20px;">
+        <div v-if="results.minicog" style="margin-top: 20px;">
             <h3>2. Sàng lọc sa sút trí tuệ (Mini-Cog)</h3>
             <p><strong>Kết luận:</strong> {{ results.minicog.interpretation }}</p>
         </div>
 
         <div style="margin-top: 20px;">
-            <h3>3. Dinh dưỡng (MNA)</h3>
+            <h3>{{ results.minicog ? '3' : '2' }}. Dinh dưỡng (MNA)</h3>
             <p><strong>Kết luận:</strong> {{ results.mna.interpretation }}</p>
         </div>
 
         <div style="margin-top: 20px;">
-            <h3>4. Suy yếu lâm sàng (CFS)</h3>
+            <h3>{{ results.minicog ? '4' : '3' }}. Suy yếu lâm sàng (CFS)</h3>
             <p><strong>Kết luận:</strong> {{ results.cfs.interpretation }}</p>
         </div>
 
         <div style="margin-top: 20px;">
-            <h3>5. Nguy cơ té ngã (Morse)</h3>
+            <h3>{{ results.minicog ? '5' : '4' }}. Nguy cơ té ngã (Morse)</h3>
             <p><strong>Kết luận:</strong> {{ results.morse.interpretation }}</p>
         </div>
     </div>

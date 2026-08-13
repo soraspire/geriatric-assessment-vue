@@ -121,6 +121,43 @@
                         <span v-if="errors.other?.has_pressure_ulcer_risk" class="error-message">{{ errors.other.has_pressure_ulcer_risk }}</span>
                       </td>
                     </tr>
+                    <template v-if="form.other.has_pressure_ulcer_risk === '1'">
+                      <tr>
+                        <td colspan="3" style="padding: 15px; background: #f8fafc; border-top: 1px dashed #cbd5e1; border-bottom: 1px dashed #cbd5e1;">
+                          <h3 style="color: #1e40af; margin-top: 0; font-size: 1.1rem; margin-bottom: 15px;">Đánh giá PADUA (Tổng điểm: {{ paduaScore }})</h3>
+                          <table class="other-details-table" style="margin-top: 0;">
+                            <tbody>
+                              <tr v-for="(label, key) in paduaQuestions" :key="key">
+                                <td colspan="2" class="table-description-detail" style="text-align: left; padding-left: 30px;">{{ label }}</td>
+                                <td class="table-action" style="width: 25%;">
+                                  <div class="radio-group" :class="{ 'is-invalid': errors.padua?.[key] }">
+                                    <label class="checkbox-item"><input type="radio" v-model="form.padua[key]" value="1"> Có</label>
+                                    <label class="checkbox-item"><input type="radio" v-model="form.padua[key]" value="0"> Không</label>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <div v-if="paduaScore >= 4" style="margin-top: 25px;">
+                            <h3 style="color: #1e40af; font-size: 1.1rem; margin-bottom: 15px;">Đánh giá IMPROVE</h3>
+                            <table class="other-details-table" style="margin-top: 0;">
+                              <tbody>
+                                <tr v-for="(label, key) in improveQuestions" :key="key">
+                                  <td colspan="2" class="table-description-detail" style="text-align: left;padding-left: 30px;">{{ label }}</td>
+                                  <td class="table-action" style="width: 25%;">
+                                    <div class="radio-group" :class="{ 'is-invalid': errors.improve?.[key] }">
+                                      <label class="checkbox-item"><input type="radio" v-model="form.improve[key]" value="1"> Có</label>
+                                      <label class="checkbox-item"><input type="radio" v-model="form.improve[key]" value="0"> Không</label>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    </template>
                     <tr>
                       <td class="table-label"><span class="check-icon">✓</span> Hoàn cảnh xã hội:</td>
                       <td class="table-description">Có người chăm sóc khi cần thiết?</td>
@@ -151,50 +188,72 @@
       <!-- III. MINI-COG -->
       <div class="card">
         <h2>III. Đánh giá sàng lọc sa sút trí tuệ (Mini-Cog)</h2>
-        <div class="form-group">
-          <p class="section-title">1. Hãy nhớ 3 từ sau:</p>
-          <div v-if="showMemoryContent">
-            <div class="minicog-memory-row">
-              <div class="memory-item">
-                <img src="/images/banana.png" alt="Chuối">
-                <p>Trái chuối</p>
+
+        <!-- Câu hỏi tiền điều kiện -->
+        <div class="cooperative-question">
+          <p class="section-title" style="margin-bottom: 12px;">Tỉnh táo, hợp tác, có thể nghe và hiểu hướng dẫn không?</p>
+          <div class="radio-inline">
+            <label class="radio-card" :class="{ active: form.minicog.can_cooperate === 'yes' }">
+              <input type="radio" v-model="form.minicog.can_cooperate" value="yes">
+              <span class="radio-icon">✔</span> Có
+            </label>
+            <label class="radio-card" :class="{ active: form.minicog.can_cooperate === 'no' }">
+              <input type="radio" v-model="form.minicog.can_cooperate" value="no">
+              <span class="radio-icon">✖</span> Không
+            </label>
+          </div>
+          <p v-if="form.minicog.can_cooperate === 'no'" class="skip-notice">
+            ⚠ Bỏ qua đánh giá Mini-Cog.
+          </p>
+          <span v-if="errors.minicog?.can_cooperate" class="error-message">{{ errors.minicog.can_cooperate }}</span>
+        </div>
+
+        <template v-if="form.minicog.can_cooperate === 'yes'">
+          <div class="form-group">
+            <p class="section-title">1. Hãy nhớ 3 từ sau:</p>
+            <div v-if="showMemoryContent">
+              <div class="minicog-memory-row">
+                <div class="memory-item">
+                  <img src="/images/banana.png" alt="Chuối">
+                  <p>Trái chuối</p>
+                </div>
+                <div class="memory-item">
+                  <img src="/images/dog.png" alt="Chó">
+                  <p>Con chó</p>
+                </div>
+                <div class="memory-item">
+                  <img src="/images/cyclebike.png" alt="Xe đạp">
+                  <p>Xe đạp</p>
+                </div>
               </div>
-              <div class="memory-item">
-                <img src="/images/dog.png" alt="Chó">
-                <p>Con chó</p>
-              </div>
-              <div class="memory-item">
-                <img src="/images/cyclebike.png" alt="Xe đạp">
-                <p>Xe đạp</p>
-              </div>
+              <button type="button" @click="toggleMemory(false)" class="btn" style="background: #10b981; margin: 0 auto; display: block; width: auto; padding: 10px 24px;">Đã nhớ</button>
             </div>
-            <button type="button" @click="toggleMemory(false)" class="btn" style="background: #10b981; margin: 0 auto; display: block; width: auto; padding: 10px 24px;">Đã nhớ</button>
+            <button v-else type="button" @click="toggleMemory(true)" class="btn" style="background: #6366f1; margin: 10px auto 0; display: block; width: auto; padding: 10px 24px;">Xem lại hình ảnh</button>
           </div>
-          <button v-else type="button" @click="toggleMemory(true)" class="btn" style="background: #6366f1; margin: 10px auto 0; display: block; width: auto; padding: 10px 24px;">Xem lại hình ảnh</button>
-        </div>
 
-        <div class="form-group">
-          <p class="section-title">2. Đâu là cái đồng hồ chỉ 11 giờ 10 phút (chọn chính xác 2 điểm)</p>
-          <div class="minicog-grid" :class="{ 'is-invalid': errors.minicog?.clock_selected }">
-            <label v-for="i in 9" :key="'clock-' + i" class="grid-item">
-              <img :src="'/images/clock-' + i + '.png'" :alt="'Clock ' + i">
-              <input type="radio" v-model="form.minicog.clock_selected" :value="i.toString()">
-            </label>
+          <div class="form-group">
+            <p class="section-title">2. Đâu là cái đồng hồ chỉ 11 giờ 10 phút (chọn chính xác 2 điểm)</p>
+            <div class="minicog-grid" :class="{ 'is-invalid': errors.minicog?.clock_selected }">
+              <label v-for="i in 9" :key="'clock-' + i" class="grid-item">
+                <img :src="'/images/clock-' + i + '.png'" :alt="'Clock ' + i">
+                <input type="radio" v-model="form.minicog.clock_selected" :value="i.toString()">
+              </label>
+            </div>
+            <span v-if="errors.minicog?.clock_selected" class="error-message">{{ errors.minicog.clock_selected }}</span>
           </div>
-          <span v-if="errors.minicog?.clock_selected" class="error-message">{{ errors.minicog.clock_selected }}</span>
-        </div>
 
-        <div class="form-group">
-          <p class="section-title">3. Nhắc lại 3 từ đã nhớ lúc đầu (Mỗi câu đúng 1 điểm)</p>
-          <div class="minicog-grid" :class="{ 'is-invalid': errors.minicog?.recall }">
-            <label v-for="item in recallItems" :key="item.id" class="grid-item">
-              <img :src="item.img" :alt="item.label">
-              <p style="font-size: 0.8rem; margin: 5px 0;">{{ item.label }}</p>
-              <input type="checkbox" v-model="form.minicog.recall" :value="item.id">
-            </label>
+          <div class="form-group">
+            <p class="section-title">3. Nhắc lại 3 từ đã nhớ lúc đầu (Mỗi câu đúng 1 điểm)</p>
+            <div class="minicog-grid" :class="{ 'is-invalid': errors.minicog?.recall }">
+              <label v-for="item in recallItems" :key="item.id" class="grid-item">
+                <img :src="item.img" :alt="item.label">
+                <p style="font-size: 0.8rem; margin: 5px 0;">{{ item.label }}</p>
+                <input type="checkbox" v-model="form.minicog.recall" :value="item.id">
+              </label>
+            </div>
+            <span v-if="errors.minicog?.recall" class="error-message">{{ errors.minicog.recall }}</span>
           </div>
-          <span v-if="errors.minicog?.recall" class="error-message">{{ errors.minicog.recall }}</span>
-        </div>
+        </template>
       </div>
 
       <!-- IV. MNA -->
@@ -254,7 +313,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '../api';
 
@@ -284,6 +343,7 @@ const form = reactive<any>({
   },
   cci: {},
   minicog: {
+    can_cooperate: '',
     clock_selected: '',
     recall: [],
   },
@@ -305,6 +365,34 @@ const form = reactive<any>({
     ho_tro_di_lai: '',
     bat_thuong_di_chuyen: '',
     tinh_trang_tinh_than: '',
+  },
+  padua: {
+    ung_thu_tien_trien: '',
+    tien_su_thuyen_tac: '',
+    bat_dong: '',
+    tinh_trang_tang_dong: '',
+    chan_thuong_phau_thuat: '',
+    tuoi_cao: '',
+    suy_tim_ho_hap: '',
+    nhom_mau_co_tim_nao: '',
+    nhiem_khuan_thap: '',
+    beo_phi: '',
+    dieu_tri_hormone: '',
+  },
+  improve: {
+    loet_da_day: '',
+    chay_mau_3_thang: '',
+    tieu_cau_duoi_50: '',
+    tuoi_85_tro_len: '',
+    suy_gan: '',
+    suy_than_nang: '',
+    dieu_tri_icu: '',
+    catheter_tinh_mach: '',
+    benh_thap_khop: '',
+    ung_thu: '',
+    tuoi_40_84: '',
+    gioi_nam: '',
+    suy_than_trung_binh: '',
   }
 });
 
@@ -319,7 +407,7 @@ const cciLabels: any = {
   dung_thuoc_chong_dong_mau: 'Dòng thuốc chống đông máu (1đ)',
   alzheimer_suy_giam_tri_nho: 'Alzheimer hay suy giảm trí nhớ (1đ)',
   benh_mo_lien_ket: 'Bệnh mô liên kết (1đ)',
-  tang_huy_ap: 'Tăng huyết áp (1đ)',
+  tang_huyet_ap: 'Tăng huyết áp (1đ)',
   liet_nua_nguoi: 'Liệt nửa người (2đ)',
   dai_thao_duong_co_bien_chung: 'Đái tháo đường có biến chứng (2đ)',
   benh_than_trung_binh_nang: 'Bệnh thận mức độ trung bình/nặng (2đ)',
@@ -440,6 +528,36 @@ const morseQuestions = {
   }
 };
 
+const paduaQuestions: any = {
+  ung_thu_tien_trien: 'Ung thư tiến triển (3đ)',
+  tien_su_thuyen_tac: 'Tiền sử thuyên tắc HKTM (loại trừ HKTM nông) (3đ)',
+  bat_dong: 'Bất động (do hạn chế của chính bệnh nhân hoặc do chỉ định của bác sĩ) (3đ)',
+  tinh_trang_tang_dong: 'Tình trạng bệnh lý tăng đông đặc biệt (3đ)',
+  chan_thuong_phau_thuat: 'Mới bị chấn thương và/hoặc phẫu thuật (≤ 1 tháng) (2đ)',
+  tuoi_cao: 'Tuổi cao (≥ 70 tuổi) (1đ)',
+  suy_tim_ho_hap: 'Suy tim và/hoặc suy hô hấp (1đ)',
+  nhom_mau_co_tim_nao: 'NMCT cấp hoặc nhồi máu não cấp (1đ)',
+  nhiem_khuan_thap: 'Nhiễm khuẩn cấp và/hoặc bệnh cơ xương khớp do thấp (1đ)',
+  beo_phi: 'Béo phì (BMI ≥ 30) (1đ)',
+  dieu_tri_hormone: 'Đang điều trị Hormone (1đ)',
+};
+
+const improveQuestions: any = {
+  loet_da_day: 'Loét dạ dày tá tràng tiến triển (4,5đ)',
+  chay_mau_3_thang: 'Chảy máu trong vòng 3 tháng trước nhập viện (4đ)',
+  tieu_cau_duoi_50: 'Số lượng tiểu cầu < 50 × 10⁹/L (4đ)',
+  tuoi_85_tro_len: 'Tuổi ≥ 85 (3,5đ)',
+  suy_gan: 'Suy gan (INR > 1,5) (2,5đ)',
+  suy_than_nang: 'Suy thận nặng (MLCT < 30 ml/phút/1,73 m²) (2,5đ)',
+  dieu_tri_icu: 'Đang nằm điều trị tại khoa hồi sức tích cực (2,5đ)',
+  catheter_tinh_mach: 'Catheter tĩnh mạch trung tâm (2đ)',
+  benh_thap_khop: 'Bệnh thấp khớp (2đ)',
+  ung_thu: 'Đang bị ung thư (2đ)',
+  tuoi_40_84: 'Tuổi 40–84 (1,5đ)',
+  gioi_nam: 'Giới nam (1,5đ)',
+  suy_than_trung_binh: 'Suy thận trung bình (MLCT 30–59 ml/phút/1,73 m²) (1đ)',
+};
+
 const calculateBMI = () => {
   const h = parseFloat(form.main.height);
   const w = parseFloat(form.main.weight);
@@ -458,6 +576,23 @@ const calculateBMI = () => {
 const toggleMemory = (show: boolean) => {
   showMemoryContent.value = show;
 };
+
+const paduaScore = computed(() => {
+  if (form.other.has_pressure_ulcer_risk !== '1') return 0;
+  let score = 0;
+  if (form.padua.ung_thu_tien_trien === '1') score += 3;
+  if (form.padua.tien_su_thuyen_tac === '1') score += 3;
+  if (form.padua.bat_dong === '1') score += 3;
+  if (form.padua.tinh_trang_tang_dong === '1') score += 3;
+  if (form.padua.chan_thuong_phau_thuat === '1') score += 2;
+  if (form.padua.tuoi_cao === '1') score += 1;
+  if (form.padua.suy_tim_ho_hap === '1') score += 1;
+  if (form.padua.nhom_mau_co_tim_nao === '1') score += 1;
+  if (form.padua.nhiem_khuan_thap === '1') score += 1;
+  if (form.padua.beo_phi === '1') score += 1;
+  if (form.padua.dieu_tri_hormone === '1') score += 1;
+  return score;
+});
 
 const validate = () => {
     const errorMessages: any = {};
@@ -488,12 +623,16 @@ const validate = () => {
         errorMessages.main = { ...errorMessages.main, bmi: 'Vui lòng nhập BMI.' };
     }
 
-    // Section III. Minicog
-    if (!form.minicog.clock_selected) {
-        errorMessages.minicog = { ...errorMessages.minicog, clock_selected: 'Vui lòng chọn hình ảnh đồng hồ.' };
-    }
-    if (!form.minicog.recall || form.minicog.recall.length !== 3) {
-        errorMessages.minicog = { ...errorMessages.minicog, recall: 'Vui lòng chọn đúng 3 từ nhớ lại.' };
+    // Section III. Minicog — chỉ validate nếu bệnh nhân hợp tác
+    if (!form.minicog.can_cooperate) {
+        errorMessages.minicog = { ...errorMessages.minicog, can_cooperate: 'Vui lòng xác nhận khả năng hợp tác của bệnh nhân.' };
+    } else if (form.minicog.can_cooperate === 'yes') {
+        if (!form.minicog.clock_selected) {
+            errorMessages.minicog = { ...errorMessages.minicog, clock_selected: 'Vui lòng chọn hình ảnh đồng hồ.' };
+        }
+        if (!form.minicog.recall || form.minicog.recall.length !== 3) {
+            errorMessages.minicog = { ...errorMessages.minicog, recall: 'Vui lòng chọn đúng 3 từ nhớ lại.' };
+        }
     }
 
     // Section IV. MNA
@@ -558,6 +697,22 @@ const validate = () => {
         errorMessages.other = { ...errorMessages.other, has_caregiver: 'Vui lòng chọn tình trạng người chăm sóc.' };
     }
 
+    // Section PADUA and IMPROVE
+    if (form.other.has_pressure_ulcer_risk === '1') {
+        Object.keys(paduaQuestions).forEach(key => {
+            if (form.padua[key] === '') {
+                errorMessages.padua = { ...errorMessages.padua, [key]: 'Vui lòng chọn.' };
+            }
+        });
+        if (paduaScore.value >= 4) {
+            Object.keys(improveQuestions).forEach(key => {
+                if (form.improve[key] === '') {
+                    errorMessages.improve = { ...errorMessages.improve, [key]: 'Vui lòng chọn.' };
+                }
+            });
+        }
+    }
+
     return errorMessages;
 };
 
@@ -582,6 +737,8 @@ const handleSubmit = async () => {
             mna: form.mna,
             cfs: form.cfs,
             morse: form.morse,
+            padua: form.padua,
+            improve: form.improve,
         };
         const response = await api.post('/assessments', payload);
         router.push(`/assessments/${response.data.uuid}`);
@@ -998,4 +1155,61 @@ select {
         grid-template-columns: 1fr;
     }
 }
+
+/* ── Mini-Cog cooperative question ──────────────────────────── */
+.cooperative-question {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.radio-inline {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.radio-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    color: #475569;
+    background: white;
+    transition: all 0.18s ease;
+    user-select: none;
+}
+
+.radio-card input[type="radio"] {
+    display: none;
+}
+
+.radio-card.active {
+    border-color: var(--primary, #4f46e5);
+    color: var(--primary, #4f46e5);
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.radio-card .radio-icon {
+    font-size: 14px;
+}
+
+.skip-notice {
+    margin-top: 12px;
+    color: #b45309;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
 </style>
