@@ -130,6 +130,9 @@
     <div class="actions-no-print" style="margin-top: 20px; display: flex; gap: 15px;">
         <router-link to="/" class="btn" style="flex: 1; margin: 0; text-align: center; line-height: 1.5;">TẠO PHIẾU MỚI</router-link>
         <button @click="handlePrint" class="btn btn-secondary" style="flex: 1; margin: 0; background-color: #64748b;">XUẤT FILE / IN PHIẾU</button>
+        <button @click="handleDownloadWord" :disabled="!assessment || downloading" class="btn btn-word" style="flex: 1; margin: 0; background-color: #2b579a;">
+            {{ downloading ? 'ĐANG TẠO FILE...' : 'TẢI FILE WORD' }}
+        </button>
     </div>
   </div>
 </template>
@@ -158,6 +161,21 @@ const fetchDetail = async () => {
 
 const handlePrint = () => {
     window.print();
+};
+
+const downloading = ref(false);
+const handleDownloadWord = async () => {
+    if (!assessment.value) return;
+    downloading.value = true;
+    try {
+        const { exportAssessmentDocx } = await import('../utils/exportAssessmentDocx');
+        await exportAssessmentDocx(assessment.value, results.value);
+    } catch (error) {
+        console.error('Failed to export Word file:', error);
+        alert('Không thể tạo file Word. Vui lòng thử lại.');
+    } finally {
+        downloading.value = false;
+    }
 };
 
 onMounted(fetchDetail);

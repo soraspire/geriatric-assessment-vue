@@ -110,15 +110,18 @@
         </div>
 
         <div v-if="pagination.totalPages > 1" class="pagination">
-            <button v-if="pagination.page > 1" @click="changePage(pagination.page - 1)" class="btn-pagination">Trước</button>
-            
+            <button :disabled="pagination.page <= 1" @click="changePage(pagination.page - 1)" class="btn-pagination">Trước</button>
+
             <div class="page-numbers">
-                <button v-for="p in pagination.totalPages" :key="p" @click="changePage(p)" class="page-number" :class="{ active: p === pagination.page }">
-                    {{ p }}
-                </button>
+                <template v-for="(p, i) in visiblePages" :key="typeof p === 'number' ? p : `gap-${i}`">
+                    <span v-if="p === '...'" class="page-ellipsis">…</span>
+                    <button v-else @click="changePage(p)" class="page-number" :class="{ active: p === pagination.page }">
+                        {{ p }}
+                    </button>
+                </template>
             </div>
 
-            <button v-if="pagination.page < pagination.totalPages" @click="changePage(pagination.page + 1)" class="btn-pagination">Sau</button>
+            <button :disabled="pagination.page >= pagination.totalPages" @click="changePage(pagination.page + 1)" class="btn-pagination">Sau</button>
         </div>
     </div>
 
@@ -199,7 +202,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import * as XLSX from 'xlsx';
 import api from '../api';
 
@@ -216,6 +219,26 @@ const pagination = reactive({
   limit: 10,
   total: 0,
   totalPages: 0,
+});
+
+// Page list with ellipsis: always first/last, plus 1 sibling each side of current.
+// e.g. current=10 of 50 → [1, '...', 9, 10, 11, '...', 50]
+const visiblePages = computed<(number | '...')[]>(() => {
+  const total = pagination.totalPages;
+  const current = pagination.page;
+  const siblings = 1;
+  // first + last + current + 2*siblings + 2 ellipsis slots
+  if (total <= 5 + siblings * 2) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const start = Math.max(2, current - siblings);
+  const end = Math.min(total - 1, current + siblings);
+  const pages: (number | '...')[] = [1];
+  if (start > 2) pages.push(start === 3 ? 2 : '...');
+  for (let p = start; p <= end; p++) pages.push(p);
+  if (end < total - 1) pages.push(end === total - 2 ? total - 1 : '...');
+  pages.push(total);
+  return pages;
 });
 
 // ─── Download modal state ────────────────────────────────────────────────────
@@ -382,9 +405,33 @@ onMounted(fetchAssessments);
     padding: 20px 0;
 }
 
+.pagination {
+    flex-wrap: wrap;
+}
+
 .page-numbers {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 6px;
+}
+
+.page-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 4px;
+    color: #94a3b8;
+    user-select: none;
+}
+
+.btn-pagination:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+@media screen and (max-width: 768px) {
+    .pagination { gap: 8px; }
+    .pagination .btn-pagination, .pagination .page-number { padding: 6px 10px; }
 }
 
 .btn-pagination, .page-number {
