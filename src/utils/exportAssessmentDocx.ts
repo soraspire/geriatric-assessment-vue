@@ -197,8 +197,7 @@ export async function exportAssessmentDocx(assessment: any, results: any) {
       new Table({ width: { size: CONTENT_WIDTH, type: WidthType.DXA }, columnWidths: RESULT_COLS, layout: TableLayoutType.FIXED, rows }),
     );
 
-    // Detailed section starts on a new page, same as the print layout.
-    children.push(h2('ĐÁNH GIÁ CHI TIẾT', true));
+    children.push(h2('ĐÁNH GIÁ CHI TIẾT'));
     const n = (withMinicog: number, without: number) => (results.minicog ? withMinicog : without);
 
     children.push(h3('1. Tiền sử bản thân (CCI)'));
